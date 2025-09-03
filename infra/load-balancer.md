@@ -1,6 +1,6 @@
 
 
-# 🌐 Types of Load Balancers in Azure
+## 🌐 Types of Load Balancers in Azure
 
 ## 1. **Azure Load Balancer** (Layer 4, TCP/UDP)
 
