@@ -1,21 +1,16 @@
-Got it ✅ You want to configure **SQL Server 2019 Always On Availability Groups (AGs)** across **two Azure regions (East US and West US)**.
-This is a **multi-region DR + HA setup** with **Windows Failover Cluster (WSFC)**, and you’ll need to carefully design networking, quorum, listener, and replication.
+## Configuring **SQL Server 2019 Always On Availability Groups (AGs)** across **two Azure regions (East US and West US)**.
 
-I’ll give you the **end-to-end steps from basics → advanced**, with **examples and Azure context**.
-
----
-
-# 📘 Step-by-Step Guide: Always On AG in Azure (East US + West US, SQL 2019)
+### 📘 Step-by-Step process: Always On AG in Azure (East US + West US, SQL 2019)
 
 ---
 
-## 1. 📋 Prerequisites
+#### 1. 📋 Prerequisites
 
 1. **Azure Resources**
 
    * Two Azure regions: **East US** (Primary) and **West US** (DR).
    * Minimum 2 VMs in East US (for synchronous HA).
-   * 1–2 VMs in West US (for DR, asynchronous).
+   * 1–2 VMs in West US (for DR, asynchronous), below i mentioned only 1 vm
    * A **Domain Controller VM** (or Azure AD DS) replicated to both regions.
 
    👉 Example:
@@ -76,9 +71,9 @@ Set-ClusterQuorum -CloudWitness -AccountName mystorageacct -AccessKey "StorageKe
 
 ---
 
-## 3. 🗄️ SQL Server Configuration
+#### 3. 🗄️ SQL Server Configuration
 
-### a) Enable Always On
+##### a) Enable Always On
 
 On each SQL VM:
 
@@ -87,7 +82,7 @@ On each SQL VM:
 3. Check **Enable AlwaysOn Availability Groups**.
 4. Restart SQL service.
 
-### b) Create AG Database
+##### b) Create AG Database
 
 On SQL1:
 
@@ -107,7 +102,7 @@ RESTORE LOG SalesDB FROM DISK = 'C:\Backup\SalesDB.trn' WITH NORECOVERY;
 
 ---
 
-## 4. 🔄 Create Always On Availability Group
+#### 4. 🔄 Create Always On Availability Group
 
 On SQL1 (Primary):
 
@@ -139,7 +134,7 @@ ALTER DATABASE [SalesDB] SET HADR AVAILABILITY GROUP = [AG1];
 
 ---
 
-## 5. 🌐 Configure Listener (Multi-Region)
+#### 5. 🌐 Configure Listener (Multi-Region)
 
 1. **Create an Internal Load Balancer (ILB)** in each region:
 
@@ -169,7 +164,7 @@ ALTER DATABASE [SalesDB] SET HADR AVAILABILITY GROUP = [AG1];
 
 ---
 
-## 6. ✅ Testing Failover
+#### 6. ✅ Testing Failover
 
 * **Within East US (SQL1 → SQL2):**
 
@@ -194,7 +189,7 @@ ALTER DATABASE [SalesDB] SET HADR AVAILABILITY GROUP = [AG1];
 
 ---
 
-## 7. 📊 Monitoring
+#### 7. 📊 Monitoring
 
 * Use **SQL Server Management Studio (SSMS) → AlwaysOn Dashboard**.
 * Use `sys.dm_hadr_*` DMV views for monitoring sync health.
@@ -202,7 +197,7 @@ ALTER DATABASE [SalesDB] SET HADR AVAILABILITY GROUP = [AG1];
 
 ---
 
-## 8. 🎯 Best Practices
+#### 8. 🎯 Best Practices
 
 * Use **Premium SSDs** for SQL data/logs.
 * Place replicas in **Availability Zones** within a region for extra HA.
@@ -211,6 +206,3 @@ ALTER DATABASE [SalesDB] SET HADR AVAILABILITY GROUP = [AG1];
 
 ---
 
-👉 This gives you a **working SQL Always On AG in Azure, across 2 regions** with **HA + DR**.
-
-Would you like me to also prepare a **Visio-style architecture diagram (with ILBs, VMs, listener, failover flow)** in **Word format** so you can use it for documentation/presentation?
