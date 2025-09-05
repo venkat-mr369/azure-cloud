@@ -1,3 +1,5 @@
+
+[Network Configuration](database/network-setup-for-always.on.md)
 ## Configuring **SQL Server 2019 Always On Availability Groups (AGs)** across **two Azure regions (East US and West US)**.
 
 ### 📘 Step-by-Step process: Always On AG in Azure (East US + West US, SQL 2019)
