@@ -1,4 +1,4 @@
-step by step configure the process **network → subnets → load balancers → Always On + App Failover**.
+Step by Step configure the process **network → subnets → load balancers → Always On + App Failover**.
 **Always On SQL + Full Application DR** across **two Azure regions (East US + West US)**
 
 ---
