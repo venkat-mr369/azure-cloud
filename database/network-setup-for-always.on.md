@@ -7,7 +7,7 @@ Step by Step configure the process **network → subnets → load balancers → 
 
 In Azure, **VPC = VNet**. Each region will have its own **VNet**.
 
-### Example:
+#### Example:
 
 * **East US VNet** → `10.10.0.0/16`
 
@@ -27,36 +27,36 @@ In Azure, **VPC = VNet**. Each region will have its own **VNet**.
 
 ---
 
-# 🔹 2. Load Balancing Setup 
+### 🔹 2. Load Balancing Setup 
 
 Azure has multiple load balancers, each used at different layers of the stack:
 
-### 1. **Internal Load Balancer (ILB)**
+#### 1. **Internal Load Balancer (ILB)**
 
 * Used for **SQL Always On Listener** inside **VNet**.
 * Provides single IP that apps connect to (`sql-listener.eastus.local`).
 * In failover, listener moves to secondary replica automatically.
 
-### 2. **Azure Standard Load Balancer**
+#### 2. **Azure Standard Load Balancer**
 
 * Layer 4 (TCP/UDP) load balancing.
 * Used inside region for VM pools (e.g., multiple Java web VMs).
 * Can be **internal** (private) or **public**.
 
-### 3. **Application Gateway**
+#### 3. **Application Gateway**
 
 * Layer 7 (HTTP/HTTPS).
 * Handles SSL termination, WAF, routing, sticky sessions.
 * Used if your web app runs on VMs or AKS.
 
-### 4. **Azure Front Door (Recommended for Multi-Region DR)**
+#### 4. **Azure Front Door (Recommended for Multi-Region DR)**
 
 * Global load balancer at Microsoft’s edge.
 * Distributes traffic across **East US** and **West US** regions.
 * Uses health probes — if East US fails, traffic auto-switches to West US.
 * Works across VNets, regions, and services.
 
-### 5. **Traffic Manager**
+#### 5. **Traffic Manager**
 
 * DNS-based global load balancer.
 * Slower failover (DNS TTL).
@@ -88,18 +88,18 @@ Azure has multiple load balancers, each used at different layers of the stack:
 
 ### 🔹 4. App Layer Load Balancing
 
-### If Java Apps run on **VMs**
+#### If Java Apps run on **VMs**
 
 * Deploy VMs in Backend Subnet (`10.10.2.0/24`, `10.20.2.0/24`).
 * Place them behind **Azure Standard Load Balancer (per region)**.
 * Optionally, add **Application Gateway** (for WAF + SSL).
 
-### If Java Apps run on **App Service**
+#### If Java Apps run on **App Service**
 
 * Use **App Service Plan with deployment slots** in both regions.
 * No ILB needed — App Service integrates with Front Door directly.
 
-### If Java Apps run on **AKS Pods**
+#### If Java Apps run on **AKS Pods**
 
 * Deploy AKS clusters in both VNets.
 * Use **Internal Load Balancer service** inside AKS (`Service type: LoadBalancer`).
@@ -107,7 +107,7 @@ Azure has multiple load balancers, each used at different layers of the stack:
 
 ---
 
-# 🔹 5. Global Load Balancing Flow
+### 🔹 5. Global Load Balancing Flow
 
 Here’s how requests move:
 
@@ -132,7 +132,7 @@ Here’s how requests move:
 
 ---
 
-# 🔹 6. Example IP/DNS Setup
+#### 🔹 6. Example IP/DNS Setup
 
 | Component             | East US        | West US        | Global / DR               |
 | --------------------- | -------------- | -------------- | ------------------------- |
@@ -143,7 +143,7 @@ Here’s how requests move:
 
 ---
 
-# 🔹 7. End-to-End Flow (Words)
+### 🔹 7. End-to-End Flow (Words)
 
 * **Normal (East US Primary):**
   User → Front Door → East US App Gateway → Web VMs → SQL Listener (East ILB) → DB Primary.
@@ -153,7 +153,7 @@ Here’s how requests move:
 
 ---
 
-# 🔹 8. DR Best Practices as Microsoft recommeneded 
+### 🔹 8. DR Best Practices as Microsoft recommeneded 
 
 ✅ Use **Standard Load Balancers** (Basic doesn’t support Availability Zones).
 ✅ Keep **subnet design identical** in both regions (easy failover).
@@ -162,5 +162,3 @@ Here’s how requests move:
 ✅ Run **DR drills** to test failover end-to-end.
 
 ---
-
-👉 Do you want me to **draw a Visio-style architecture diagram** showing the full flow (subnets, VNets, ILB, App Gateway, Front Door, SQL) for East + West DR setup?
